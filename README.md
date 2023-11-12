@@ -38,10 +38,7 @@ My solutions for [Advent of Code 2023](https://adventofcode.com/2023) completed 
 2. Install any missing dependencies:
     - [Maven](https://maven.apache.org/install.html)
     - [Java 21](https://www.oracle.com/java/technologies/downloads/#java21)
-3. Run the project using the following command:
-   ```bash
-   mvn clean compile exec:java
-   ```
+3. Run the project from [Main.kt](src/main/kotlin/dev/hmoritz/aoc2023/Main.kt)
 
 ## Solutions
 
