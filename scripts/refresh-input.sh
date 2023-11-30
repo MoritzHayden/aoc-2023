@@ -1,11 +1,15 @@
 #!/bin/bash
 
-#####################################################################################################
-# Description: This script will download the input for each day of the Advent of Code, if it exists #
-# Prerequisite: Set your AoC session token as an environment variable named AOC_SESSION_TOKEN       #
-# Usage: ./scripts/refresh-input.sh                                                                 #
-# Author: Hayden Moritz                                                                             #
-#####################################################################################################
+########################################################################################################
+# Author: Hayden Moritz                                                                                #
+# Description: This script will download the input for each day of the Advent of Code, if it exists    #
+# Prerequisites:                                                                                       #
+#   1. Set your AoC session token as an environment variable named AOC_SESSION_TOKEN. For example:     #
+#      export AOC_SESSION_TOKEN="53616c823..."                                                         #
+#   2. Set your AoC user agent string as an environment variable named $AOC_USER_AGENT. For example:   #
+#      export AOC_USER_AGENT="github.com/testuser/aoc-solutions by test@testuser.com"                  #
+# Usage: ./scripts/refresh-input.sh                                                                    #
+########################################################################################################
 
 YEAR=2023
 echo "Refreshing input for Advent of Code $YEAR..."
@@ -15,7 +19,7 @@ do
     DAY_FORMATTED=$(printf "%02d" "$DAY")
     URL="https://adventofcode.com/$YEAR/day/$DAY/input"
     OUTPUT_FILE="src/main/resources/input/day$DAY_FORMATTED.txt"
-    RESPONSE=$(curl -s -w "%{http_code}" --cookie "session=$AOC_SESSION_TOKEN" $URL)
+    RESPONSE=$(curl -v -s -w "%{http_code}" -A "$AOC_USER_AGENT" -b "session=$AOC_SESSION_TOKEN" $URL)
     RESPONSE_HTTP_CODE=$(tail -n1 <<< "$RESPONSE")
     RESPONSE_CONTENT=$(sed '$ d' <<< "$RESPONSE")
 
