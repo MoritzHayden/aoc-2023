@@ -38,7 +38,9 @@ My solutions for [Advent of Code 2023](https://adventofcode.com/2023) completed 
 2. Install any missing dependencies:
     - [Maven](https://maven.apache.org/download.cgi)
     - [Java 21](https://www.oracle.com/java/technologies/downloads/#java21)
-3. Run the project from [Main.kt](src/main/kotlin/dev/hmoritz/aoc2023/Main.kt)
+3. Set an `AOC_SESSION_TOKEN` environment variable to your [Advent of Code](https://adventofcode.com/) session cookie without the `session=` prefix
+4. Run [refresh-input.sh](scripts/refresh-input.sh) to scrape the input files
+5. Run the project from [Main.kt](src/main/kotlin/dev/hmoritz/aoc2023/Main.kt)
 
 ## Solutions
 
