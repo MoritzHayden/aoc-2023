@@ -7,6 +7,7 @@ package dev.hmoritz.aoc2023.days
 import dev.hmoritz.aoc2023.models.Day
 import dev.hmoritz.aoc2023.util.Constants.filenames
 import dev.hmoritz.aoc2023.util.Utils.readFile
+import dev.hmoritz.aoc2023.util.Utils.wordToDigit
 import dev.hmoritz.aoc2023.util.Utils.writeSolutionsToFile
 
 class Day01() : Day {
@@ -20,12 +21,21 @@ class Day01() : Day {
     }
 
     private fun solvePart1(): String {
-        // STUB
-        return ""
+        var sum = 0
+        input.forEach { line ->
+            val lineDigits = line.filter { it.isDigit() }
+            sum += "${lineDigits.first()}${lineDigits.last()}".toInt()
+        }
+        return sum.toString()
     }
 
     private fun solvePart2(): String {
-        // STUB
-        return ""
+        var sum = 0
+        input.forEach { line ->
+            val regex = Regex("(one|two|three|four|five|six|seven|eight|nine|\\d)")
+            val matches = regex.findAll(line).toList()
+            sum += "${wordToDigit(matches.first().value)}${wordToDigit(matches.last().value)}".toInt()
+        }
+        return sum.toString()
     }
 }
