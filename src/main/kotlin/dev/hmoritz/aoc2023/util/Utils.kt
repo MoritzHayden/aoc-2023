@@ -23,6 +23,25 @@ object Utils {
         writeFile(filename, solutions)
     }
 
+    // Convert the given word to a digit
+    fun wordToDigit(word: String): Int {
+        if (word.toDoubleOrNull() != null) return word.toInt()
+
+        return when (word) {
+            "nine" -> 9
+            "eight" -> 8
+            "seven" -> 7
+            "six" -> 6
+            "five" -> 5
+            "four" -> 4
+            "three" -> 3
+            "two" -> 2
+            "one" -> 1
+            "zero" -> 0
+            else -> throw IllegalArgumentException("Invalid word: $word")
+        }
+    }
+
     // Convert the given string to a resource URI
     private fun String.toURI(): URI =
         Utils.javaClass.classLoader.getResource(this)?.toURI()
