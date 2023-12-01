@@ -19,7 +19,7 @@ do
     DAY_FORMATTED=$(printf "%02d" "$DAY")
     URL="https://adventofcode.com/$YEAR/day/$DAY/input"
     OUTPUT_FILE="src/main/resources/input/day$DAY_FORMATTED.txt"
-    RESPONSE=$(curl -v -s -w "%{http_code}" -A "$AOC_USER_AGENT" -b "session=$AOC_SESSION_TOKEN" $URL)
+    RESPONSE=$(curl -s -w "%{http_code}" -A "$AOC_USER_AGENT" -b "session=$AOC_SESSION_TOKEN" $URL)
     RESPONSE_HTTP_CODE=$(tail -n1 <<< "$RESPONSE")
     RESPONSE_CONTENT=$(sed '$ d' <<< "$RESPONSE")
 
