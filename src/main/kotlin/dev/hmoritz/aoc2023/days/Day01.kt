@@ -33,8 +33,8 @@ class Day01() : Day {
     private fun solvePart2(): String {
         val calibrationValues = mutableListOf<Int>()
         input.forEach { line ->
-            val regex = Regex("(\\d|one|two|three|four|five|six|seven|eight|nine)")
-            val matches = regex.findAll(line).toList()
+            val regex = Regex("\\d|one|two|three|four|five|six|seven|eight|nine")
+            val matches = regex.findAll(line)
             val calibrationValue = (wordToDigit(matches.first().value) * 10) + wordToDigit(matches.last().value)
             calibrationValues.add(calibrationValue)
         }
