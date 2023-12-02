@@ -4,6 +4,8 @@
  */
 package dev.hmoritz.aoc2023.days
 
+import dev.hmoritz.aoc2023.models.CubeGame
+import dev.hmoritz.aoc2023.models.CubeGameSet
 import dev.hmoritz.aoc2023.models.Day
 import dev.hmoritz.aoc2023.util.Constants.filenames
 import dev.hmoritz.aoc2023.util.Utils.readFile
@@ -20,12 +22,61 @@ class Day02() : Day {
     }
 
     private fun solvePart1(): String {
-        // STUB
-        return ""
+        val cubeGames = parseCubeGames()
+        val maxRedCubes = 12
+        val maxGreenCubes = 13
+        val maxBlueCubes = 14
+        val possibleCubeGameIds = mutableListOf<Int>()
+
+        cubeGames.forEach { cubeGame ->
+            var possibleGame = true
+            cubeGame.sets.forEach { cubeGameSet ->
+                if (cubeGameSet.redCount > maxRedCubes ||
+                    cubeGameSet.greenCount > maxGreenCubes ||
+                    cubeGameSet.blueCount > maxBlueCubes) {
+                    possibleGame = false
+                }
+            }
+            if (possibleGame) {
+                possibleCubeGameIds.add(cubeGame.id)
+            }
+        }
+
+        return possibleCubeGameIds.sum().toString()
     }
 
     private fun solvePart2(): String {
         // STUB
         return ""
+    }
+
+    private fun parseCubeGames(): MutableList<CubeGame> {
+        val cubeGames = mutableListOf<CubeGame>()
+        input.forEach { line ->
+            val game = line.split(":")
+            val gameId = game[0].filter { it.isDigit() }.toInt()
+            val rawGameSets = game[1]
+                .replace(" ", "")
+                .split(";")
+            val parsedGameSets = mutableListOf<CubeGameSet>()
+            rawGameSets.forEach { rawGameSet ->
+                val cubeCounts = rawGameSet.split(",")
+                var redCount = 0
+                var greenCount = 0
+                var blueCount = 0
+                cubeCounts.forEach { cubeCount ->
+                    if (cubeCount.contains("red")) {
+                        redCount = cubeCount.filter { it.isDigit() }.toInt()
+                    } else if (cubeCount.contains("green")) {
+                        greenCount = cubeCount.filter { it.isDigit() }.toInt()
+                    } else if (cubeCount.contains("blue")) {
+                        blueCount = cubeCount.filter { it.isDigit() }.toInt()
+                    }
+                }
+                parsedGameSets.add(CubeGameSet(redCount, greenCount, blueCount))
+            }
+            cubeGames.add(CubeGame(gameId, parsedGameSets))
+        }
+        return cubeGames
     }
 }
