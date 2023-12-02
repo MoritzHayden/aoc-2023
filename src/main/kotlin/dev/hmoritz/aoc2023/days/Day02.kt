@@ -46,8 +46,22 @@ class Day02() : Day {
     }
 
     private fun solvePart2(): String {
-        // STUB
-        return ""
+        val cubeGames = parseCubeGames()
+        val cubeGamePowers = mutableListOf<Int>()
+
+        cubeGames.forEach { cubeGame ->
+            var maxRedCubes = 0
+            var maxGreenCubes = 0
+            var maxBlueCubes = 0
+            cubeGame.sets.forEach { cubeGameSet ->
+                if (cubeGameSet.redCount > maxRedCubes) maxRedCubes = cubeGameSet.redCount
+                if (cubeGameSet.greenCount > maxGreenCubes) maxGreenCubes = cubeGameSet.greenCount
+                if (cubeGameSet.blueCount > maxBlueCubes) maxBlueCubes = cubeGameSet.blueCount
+            }
+            cubeGamePowers.add(maxRedCubes * maxGreenCubes * maxBlueCubes)
+        }
+
+        return cubeGamePowers.sum().toString()
     }
 
     private fun parseCubeGames(): MutableList<CubeGame> {
