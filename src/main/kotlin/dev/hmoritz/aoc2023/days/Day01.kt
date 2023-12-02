@@ -24,8 +24,11 @@ class Day01() : Day {
         val calibrationValues = mutableListOf<Int>()
         input.forEach { line ->
             val lineDigits = line.filter { it.isDigit() }
-            val calibrationValue = (wordToDigit(lineDigits.first().toString()) * 10) + wordToDigit(lineDigits.last().toString())
-            calibrationValues.add(calibrationValue)
+            if (lineDigits.isNotEmpty()) {
+                val calibrationValue =
+                    (wordToDigit(lineDigits.first().toString()) * 10) + wordToDigit(lineDigits.last().toString())
+                calibrationValues.add(calibrationValue)
+            }
         }
         return calibrationValues.sum().toString()
     }
@@ -33,10 +36,20 @@ class Day01() : Day {
     private fun solvePart2(): String {
         val calibrationValues = mutableListOf<Int>()
         input.forEach { line ->
-            val regex = Regex("\\d|one|two|three|four|five|six|seven|eight|nine")
-            val matches = regex.findAll(line)
-            val calibrationValue = (wordToDigit(matches.first().value) * 10) + wordToDigit(matches.last().value)
-            calibrationValues.add(calibrationValue)
+            val lineDigits = line.replace("one", "o1ne")
+                .replace("two", "t2wo")
+                .replace("three", "th3ree")
+                .replace("four", "fo4ur")
+                .replace("five", "fi5ve")
+                .replace("six", "s6ix")
+                .replace("seven", "se7ven")
+                .replace("eight", "ei8ght")
+                .replace("nine", "ni9ne")
+                .filter { it.isDigit() }
+            if (lineDigits.isNotEmpty()) {
+                val calibrationValue = (wordToDigit(lineDigits.first().toString()) * 10) + wordToDigit(lineDigits.last().toString())
+                calibrationValues.add(calibrationValue)
+            }
         }
         return calibrationValues.sum().toString()
     }
