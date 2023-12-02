@@ -21,21 +21,23 @@ class Day01() : Day {
     }
 
     private fun solvePart1(): String {
-        var sum = 0
+        val calibrationValues = mutableListOf<Int>()
         input.forEach { line ->
             val lineDigits = line.filter { it.isDigit() }
-            sum += "${lineDigits.first()}${lineDigits.last()}".toInt()
+            val calibrationValue = (wordToDigit(lineDigits.first().toString()) * 10) + wordToDigit(lineDigits.last().toString())
+            calibrationValues.add(calibrationValue)
         }
-        return sum.toString()
+        return calibrationValues.sum().toString()
     }
 
     private fun solvePart2(): String {
-        var sum = 0
+        val calibrationValues = mutableListOf<Int>()
         input.forEach { line ->
-            val regex = Regex("(one|two|three|four|five|six|seven|eight|nine|\\d)")
+            val regex = Regex("(\\d|one|two|three|four|five|six|seven|eight|nine)")
             val matches = regex.findAll(line).toList()
-            sum += "${wordToDigit(matches.first().value)}${wordToDigit(matches.last().value)}".toInt()
+            val calibrationValue = (wordToDigit(matches.first().value) * 10) + wordToDigit(matches.last().value)
+            calibrationValues.add(calibrationValue)
         }
-        return sum.toString()
+        return calibrationValues.sum().toString()
     }
 }
