@@ -43,7 +43,7 @@ object Utils {
         }
     }
 
-    fun isSymbol(char: Char) = char in symbols
+    fun isSymbol(char: Char?) = char in symbols
 
     // Convert the given string to a resource URI
     private fun String.toURI(): URI =
