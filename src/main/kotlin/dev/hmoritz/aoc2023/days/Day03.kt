@@ -61,8 +61,6 @@ class Day03() : Day {
             }
         }
 
-        println(partNumbers)
-
         return partNumbers.sum().toString()
     }
 
