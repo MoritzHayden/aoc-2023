@@ -20,7 +20,7 @@ class Day03() : Day {
     }
 
     private fun solvePart1(): String {
-        // STUB
+
         return ""
     }
 
