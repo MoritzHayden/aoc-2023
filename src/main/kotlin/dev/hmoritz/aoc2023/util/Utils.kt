@@ -1,5 +1,6 @@
 package dev.hmoritz.aoc2023.util
 
+import dev.hmoritz.aoc2023.util.Constants.symbols
 import java.io.File
 import java.net.URI
 
@@ -41,6 +42,8 @@ object Utils {
             else -> throw IllegalArgumentException("Invalid word: $word")
         }
     }
+
+    fun isSymbol(char: Char) = char in symbols
 
     // Convert the given string to a resource URI
     private fun String.toURI(): URI =
