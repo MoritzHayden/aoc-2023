@@ -65,7 +65,50 @@ class Day03() : Day {
     }
 
     private fun solvePart2(): String {
-        // STUB
-        return ""
+        val numberIndexes = mutableListOf<Pair<Pair<Int, Int>, Pair<Int, Int>>>()
+        val gearIndexes = mutableListOf<Pair<Int, Int>>()
+        val gearRatios = mutableListOf<Int>()
+        for (i in input.indices) {
+            var numberStartIndex: Pair<Int, Int>? = null
+            for (j in input[i].indices) {
+                val currentChar = input[i][j]
+                if (numberStartIndex == null && currentChar.isDigit()) {
+                    numberStartIndex = Pair(i, j)
+                } else if (currentChar == '*') {
+                    if (numberStartIndex != null) numberIndexes.add(Pair(numberStartIndex, Pair(i, j - 1)))
+                    gearIndexes.add(Pair(i, j))
+                    numberStartIndex = null
+                } else if (numberStartIndex != null && !currentChar.isDigit()) {
+                    numberIndexes.add(Pair(numberStartIndex, Pair(i, j - 1)))
+                    numberStartIndex = null
+                } else if (numberStartIndex != null && j == input[i].lastIndex) {
+                    numberIndexes.add(Pair(numberStartIndex, Pair(i, j)))
+                    numberStartIndex = null
+                }
+            }
+        }
+
+        gearIndexes.forEach { gearIndex ->
+            val foundNumbers = mutableListOf<Int>()
+            numberIndexes.forEach { numberIndex ->
+                val lowerStartNumberX = numberIndex.first.first - 1
+                val lowerStartNumberY = numberIndex.first.second - 1
+                val upperEndNumberX = numberIndex.second.first + 1
+                val upperEndNumberY = numberIndex.second.second + 1
+                if (gearIndex.first in lowerStartNumberX..upperEndNumberX &&
+                    gearIndex.second in lowerStartNumberY..upperEndNumberY
+                ) {
+                    foundNumbers.add(
+                        input[numberIndex.first.first].substring(
+                            numberIndex.first.second,
+                            numberIndex.second.second + 1
+                        ).toInt()
+                    )
+                }
+            }
+            if (foundNumbers.count() == 2) gearRatios.add(foundNumbers[0] * foundNumbers[1])
+        }
+
+        return gearRatios.sum().toString()
     }
 }
