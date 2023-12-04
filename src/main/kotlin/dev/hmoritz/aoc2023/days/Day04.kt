@@ -22,18 +22,8 @@ class Day04() : Day {
     private fun solvePart1(): String {
         val cardScores = mutableListOf<Int>()
         input.forEach { line ->
-            val splitLine = line.split("|")
-            val winningNumbers = splitLine[0]
-                .split(":")[1]
-                .trim()
-                .split("\\s+".toRegex())
-                .map { it.toInt() }
-                .toSet()
-            val myNumbers = splitLine[1]
-                .trim()
-                .split("\\s+".toRegex())
-                .map { it.toInt() }
-                .toSet()
+            val winningNumbers = getWinningNumbers(line)
+            val myNumbers = getMyNumbers(line)
             val matchingNumbers = myNumbers.intersect(winningNumbers)
             var cardScore = 0
             matchingNumbers.forEach { _ -> if (cardScore == 0) cardScore++ else cardScore *= 2 }
@@ -43,7 +33,52 @@ class Day04() : Day {
     }
 
     private fun solvePart2(): String {
-        // STUB
-        return ""
+        var totalCards = 0
+        val cardCopyCount = mutableMapOf<Int, Int>()
+        input.forEach { line ->
+            val cardNumber = getCardNumber(line)
+            val cardsToCheck = 1 + cardCopyCount.getOrDefault(cardNumber, 0)
+            val winningNumbers = getWinningNumbers(line)
+            val myNumbers = getMyNumbers(line)
+            val matchingNumberCount = myNumbers.intersect(winningNumbers)
+            var cardCopyNumber = cardNumber + 1
+            matchingNumberCount.forEach { _ ->
+                if (cardCopyCount.containsKey(cardCopyNumber)) {
+                    cardCopyCount[cardCopyNumber] = cardCopyCount[cardCopyNumber]!! + cardsToCheck
+                } else {
+                    cardCopyCount[cardCopyNumber] = cardsToCheck
+                }
+                cardCopyNumber++
+            }
+            totalCards += cardsToCheck
+        }
+        return totalCards.toString()
+    }
+
+    private fun getCardNumber(line: String): Int {
+        return line
+            .split("|")[0]
+            .split(":")[0]
+            .split("\\s+".toRegex())[1]
+            .toInt()
+    }
+
+    private fun getWinningNumbers(line: String): Set<Int> {
+        return line
+            .split("|")[0]
+            .split(":")[1]
+            .trim()
+            .split("\\s+".toRegex())
+            .map { it.toInt() }
+            .toSet()
+    }
+
+    private fun getMyNumbers(line: String): Set<Int> {
+        return line
+            .split("|")[1]
+            .trim()
+            .split("\\s+".toRegex())
+            .map { it.toInt() }
+            .toSet()
     }
 }
