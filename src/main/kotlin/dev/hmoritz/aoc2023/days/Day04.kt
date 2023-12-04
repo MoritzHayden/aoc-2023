@@ -20,8 +20,26 @@ class Day04() : Day {
     }
 
     private fun solvePart1(): String {
-        // STUB
-        return ""
+        val cardScores = mutableListOf<Int>()
+        input.forEach { line ->
+            val splitLine = line.split("|")
+            val winningNumbers = splitLine[0]
+                .split(":")[1]
+                .trim()
+                .split("\\s+".toRegex())
+                .map { it.toInt() }
+                .toSet()
+            val myNumbers = splitLine[1]
+                .trim()
+                .split("\\s+".toRegex())
+                .map { it.toInt() }
+                .toSet()
+            val matchingNumbers = myNumbers.intersect(winningNumbers)
+            var cardScore = 0
+            matchingNumbers.forEach { _ -> if (cardScore == 0) cardScore++ else cardScore *= 2 }
+            cardScores.add(cardScore)
+        }
+        return cardScores.sum().toString()
     }
 
     private fun solvePart2(): String {
