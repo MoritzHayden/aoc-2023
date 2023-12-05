@@ -33,3 +33,9 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Input ###
+src/main/resources/input/
+
+### Output ###
+src/main/kotlin/dev/hmoritz/aoc2023/solutions/
