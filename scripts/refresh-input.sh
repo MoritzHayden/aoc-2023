@@ -18,10 +18,14 @@ for DAY in {1..25}
 do
     DAY_FORMATTED=$(printf "%02d" "$DAY")
     URL="https://adventofcode.com/$YEAR/day/$DAY/input"
-    OUTPUT_FILE="src/main/resources/input/day$DAY_FORMATTED.txt"
+    OUTPUT_DIR="${BASH_SOURCE%/*}/../src/main/resources/input"
+    OUTPUT_FILE="$OUTPUT_DIR/day$DAY_FORMATTED.txt"
     RESPONSE=$(curl -s -w "%{http_code}" -A "$AOC_USER_AGENT" -b "session=$AOC_SESSION_TOKEN" $URL)
     RESPONSE_HTTP_CODE=$(tail -n1 <<< "$RESPONSE")
     RESPONSE_CONTENT=$(sed '$ d' <<< "$RESPONSE")
+
+    mkdir -p "$OUTPUT_DIR"
+    touch "$OUTPUT_FILE"
 
     if [ "$RESPONSE_HTTP_CODE" == "200" ]; then
         echo "$RESPONSE_CONTENT" > "$OUTPUT_FILE"
