@@ -3,14 +3,21 @@ package dev.hmoritz.aoc2023.util
 import dev.hmoritz.aoc2023.util.Constants.symbols
 import java.io.File
 import java.net.URI
+import java.nio.file.Files
+import java.nio.file.Paths
 
 object Utils {
     // Read the given file and return its lines as a list of strings
     fun readFile(filename: String) = File("input/$filename".toURI()).readLines()
 
     // Write the given string to the given file
-    fun writeFile(filename: String, content: String) =
-        File("src/main/kotlin/dev/hmoritz/aoc2023/solutions/$filename").writeText(content)
+    fun writeFile(filename: String, content: String) {
+        val outputPath = "src/main/kotlin/dev/hmoritz/aoc2023/solutions"
+        val outputFile = File("$outputPath/$filename")
+        Files.createDirectories(Paths.get(outputPath));
+        outputFile.createNewFile()
+        outputFile.writeText(content)
+    }
 
     // Write the given solutions to the given file
     fun writeSolutionsToFile(filename: String, solutionPart1: String, solutionPart2: String) {
