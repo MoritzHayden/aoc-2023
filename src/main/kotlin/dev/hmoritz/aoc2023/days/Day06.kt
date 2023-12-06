@@ -20,12 +20,29 @@ class Day06() : Day {
     }
 
     private fun solvePart1(): String {
-        // STUB
-        return ""
+        val races = getRacesPart1()
+        val raceWaysToWin = mutableListOf<Int>()
+        races.forEach { race ->
+            var waysToWin = 0
+            for (buttonHoldTime in 0..race.first) {
+                val remainingTime = race.first - buttonHoldTime
+                val distance = remainingTime * buttonHoldTime
+                if (distance > race.second) waysToWin++
+            }
+            raceWaysToWin.add(waysToWin)
+        }
+        return raceWaysToWin.reduce(Int::times).toString()
     }
 
     private fun solvePart2(): String {
         // STUB
         return ""
+    }
+
+    // Returns a list of pairs in the form (time, distance)
+    private fun getRacesPart1(): List<Pair<Int, Int>> {
+        val times = input[0].replace("Time:", "").trim().split("\\s+".toRegex()).map { it.toInt() }
+        val distances = input[1].replace("Distance:", "").trim().split("\\s+".toRegex()).map { it.toInt() }
+        return times.zip(distances)
     }
 }
