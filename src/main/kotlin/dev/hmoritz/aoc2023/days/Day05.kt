@@ -11,6 +11,7 @@ import dev.hmoritz.aoc2023.models.Day
 import dev.hmoritz.aoc2023.util.Constants.filenames
 import dev.hmoritz.aoc2023.util.Utils.readFile
 import dev.hmoritz.aoc2023.util.Utils.writeSolutionsToFile
+import kotlin.math.min
 
 class Day05() : Day {
     private val filename = filenames[4]
@@ -23,7 +24,7 @@ class Day05() : Day {
     }
 
     private fun solvePart1(): String {
-        val seeds = input[0].replace("seeds: ", "").split(" ").map { it.toLong() }
+        val seeds = getSeedsPart1()
         val almanacMaps = getAlmanacMaps()
         val soilDestinations = mutableListOf<Long>()
         val fertilizerDestinations = mutableListOf<Long>()
@@ -45,8 +46,55 @@ class Day05() : Day {
     }
 
     private fun solvePart2(): String {
-        // STUB
-        return ""
+        // TODO: Optimize this (threading?)
+        val seedRanges = getSeedsPart2()
+        val almanacMaps = getAlmanacMaps()
+        var lowestLocation = Long.MAX_VALUE
+        for (seedRange in seedRanges) {
+            for (seed in seedRange.first..seedRange.first + seedRange.second) {
+                lowestLocation = min(lowestLocation, resolveSeedLocation(seed, almanacMaps))
+            }
+        }
+        return lowestLocation.toString()
+    }
+
+    private fun getSeedsPart1(): List<Long> {
+        return input[0].replace("seeds: ", "").split(" ").map { it.toLong() }
+    }
+
+    private fun getSeedsPart2(): List<Pair<Long, Long>> {
+        val seedsTemp = input[0].replace("seeds: ", "").split(" ").map { it.toLong() }
+        val seedRanges = mutableListOf<Pair<Long, Long>>()
+        for (i in 1 until seedsTemp.size step 2) {
+            seedRanges.add(Pair(seedsTemp[i - 1], seedsTemp[i]))
+        }
+        return seedRanges
+    }
+
+    private fun resolveSeedLocation(seed: Long, almanacMaps: List<AlmanacMap>): Long {
+        return mapDestination(
+            mapDestination(
+                mapDestination(
+                    mapDestination(
+                        mapDestination(
+                            mapDestination(
+                                mapDestination(seed, almanacMaps, AlmanacMapType.SEED_TO_SOIL),
+                                almanacMaps,
+                                AlmanacMapType.SOIL_TO_FERTILIZER
+                            ), almanacMaps, AlmanacMapType.FERTILIZER_TO_WATER
+                        ), almanacMaps, AlmanacMapType.WATER_TO_LIGHT
+                    ), almanacMaps, AlmanacMapType.LIGHT_TO_TEMPERATURE
+                ), almanacMaps, AlmanacMapType.TEMPERATURE_TO_HUMIDITY
+            ), almanacMaps, AlmanacMapType.HUMIDITY_TO_LOCATION
+        )
+    }
+
+    private fun mapDestination(
+        source: Long,
+        almanacMaps: List<AlmanacMap>,
+        mapType: AlmanacMapType
+    ): Long {
+        return resolveDestination(source, almanacMaps.first { it.type == mapType })
     }
 
     private fun mapDestinations(
