@@ -30,7 +30,7 @@ My solutions for [Advent of Code 2023](https://adventofcode.com/2023) completed 
 | 4   | [Link](https://adventofcode.com/2023/day/4)  | [Solution](src/main/kotlin/dev/hmoritz/aoc2023/days/Day04.kt) | ✅      | ✅      |
 | 5   | [Link](https://adventofcode.com/2023/day/5)  | [Solution](src/main/kotlin/dev/hmoritz/aoc2023/days/Day05.kt) | ✅      | ✅      |
 | 6   | [Link](https://adventofcode.com/2023/day/6)  | [Solution](src/main/kotlin/dev/hmoritz/aoc2023/days/Day06.kt) | ✅      | ✅      |
-| 7   | [Link](https://adventofcode.com/2023/day/7)  | [Solution](src/main/kotlin/dev/hmoritz/aoc2023/days/Day07.kt) | ❌      | ❌      |
+| 7   | [Link](https://adventofcode.com/2023/day/7)  | [Solution](src/main/kotlin/dev/hmoritz/aoc2023/days/Day07.kt) | ✅      | ❌      |
 | 8   | [Link](https://adventofcode.com/2023/day/8)  | [Solution](src/main/kotlin/dev/hmoritz/aoc2023/days/Day08.kt) | ❌      | ❌      |
 | 9   | [Link](https://adventofcode.com/2023/day/9)  | [Solution](src/main/kotlin/dev/hmoritz/aoc2023/days/Day09.kt) | ❌      | ❌      |
 | 10  | [Link](https://adventofcode.com/2023/day/10) | [Solution](src/main/kotlin/dev/hmoritz/aoc2023/days/Day10.kt) | ❌      | ❌      |
