@@ -30,4 +30,32 @@ class BinaryTreeNode<T>(
 
     fun find(value: T): BinaryTreeNode<T>? =
         if (this.value == value) this else left?.find(value) ?: right?.find(value)
+
+    fun traverseInOrder(): List<T> {
+        val list = mutableListOf<T>()
+        left?.traverseInOrder()?.let { list.addAll(it) }
+        list.add(value)
+        right?.traverseInOrder()?.let { list.addAll(it) }
+        return list
+    }
+
+    fun traversePreOrder(): List<T> {
+        val list = mutableListOf<T>()
+        list.add(value)
+        left?.traversePreOrder()?.let { list.addAll(it) }
+        right?.traversePreOrder()?.let { list.addAll(it) }
+        return list
+    }
+
+    fun traversePostOrder(): List<T> {
+        val list = mutableListOf<T>()
+        left?.traversePostOrder()?.let { list.addAll(it) }
+        right?.traversePostOrder()?.let { list.addAll(it) }
+        list.add(value)
+        return list
+    }
+
+    override fun toString(): String {
+        return "BinaryTreeNode(value=$value, parent=${parent?.value}, left=${left?.value}, right=${right?.value})"
+    }
 }
