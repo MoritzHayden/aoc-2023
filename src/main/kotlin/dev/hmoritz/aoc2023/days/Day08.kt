@@ -5,7 +5,6 @@
 package dev.hmoritz.aoc2023.days
 
 import dev.hmoritz.aoc2023.models.Day
-import dev.hmoritz.aoc2023.util.BinaryTreeNode
 import dev.hmoritz.aoc2023.util.Constants.filenames
 import dev.hmoritz.aoc2023.util.Utils.readFile
 import dev.hmoritz.aoc2023.util.Utils.writeSolutionsToFile
@@ -21,22 +20,14 @@ class Day08() : Day {
     }
 
     private fun solvePart1(): String {
-        // TODO: This works on the test input, but hangs on the real input.
-        //  May need different data structure or remove cyclical references.
         val instructions = parseInstructions()
-        val root = parseTree()
-        var currentNodeValue = "AAA"
+        val root = parseMap()
+        var currentLocation = "AAA"
         var steps = 0
-        println()
-        while (currentNodeValue != "ZZZ") {
+        while (currentLocation != "ZZZ") {
             steps++
             val instruction = instructions[(steps - 1) % instructions.size]
-            print("Step $steps: Moving $instruction from $currentNodeValue to ")
-            when (instruction) {
-                'L' -> currentNodeValue = root.find(currentNodeValue)?.getLeft()?.getValue() ?: currentNodeValue
-                'R' -> currentNodeValue = root.find(currentNodeValue)?.getRight()?.getValue() ?: currentNodeValue
-            }
-            println(currentNodeValue)
+            currentLocation = move(instruction, currentLocation, root)
         }
         return steps.toString()
     }
@@ -46,12 +37,20 @@ class Day08() : Day {
         return ""
     }
 
+    private fun move(instruction: Char, location: String, map: Map<String, Pair<String, String>>): String {
+        return when (instruction) {
+            'L' -> map[location]?.first ?: location
+            'R' -> map[location]?.second ?: location
+            else -> location
+        }
+    }
+
     private fun parseInstructions(): CharArray {
         return input[0].toCharArray()
     }
 
-    private fun parseTree(): BinaryTreeNode<String> {
-        val tree = BinaryTreeNode("AAA")
+    private fun parseMap(): Map<String, Pair<String, String>> {
+        val map = mutableMapOf<String, Pair<String, String>>()
         for (i in 2..<input.size) {
             val splitLine = input[i].split(" = ")
             val root = splitLine[0]
@@ -62,9 +61,8 @@ class Day08() : Day {
                 .split(" ")
             val left = children[0]
             val right = children[1]
-            if (root != left) tree.find(root)?.addLeft(left)
-            if (root != right) tree.find(root)?.addRight(right)
+            map[root] = Pair(left, right)
         }
-        return tree
+        return map
     }
 }
