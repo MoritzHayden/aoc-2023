@@ -22,7 +22,15 @@ class Day07() : Day {
     }
 
     private fun solvePart1(): String {
-        return parseInput()
+        return calculateTotalWinnings(false)
+    }
+
+    private fun solvePart2(): String {
+        return calculateTotalWinnings(true)
+    }
+
+    private fun calculateTotalWinnings(isJokerOn: Boolean): String {
+        return parseInput(isJokerOn)
             .sortedWith(
                 compareByDescending<CamelCardHand> { it.type }
                     .thenBy { it.cardValues[0] }
@@ -36,23 +44,19 @@ class Day07() : Day {
             .toString()
     }
 
-    private fun solvePart2(): String {
-        // STUB
-        return ""
+    private fun parseInput(isJokerOn: Boolean): List<CamelCardHand> {
+        return input.map { createCamelCardHand(it, isJokerOn) }
     }
 
-    private fun parseInput(): List<CamelCardHand> {
-        return input.map { createCamelCardHand(it) }
-    }
-
-    private fun createCamelCardHand(line: String): CamelCardHand {
+    private fun createCamelCardHand(line: String, isJokerOn: Boolean): CamelCardHand {
+        if (isJokerOn) return createBestCamelCardHand(line)
         val splitLine = line.split(" ")
         val rawHand = splitLine[0]
         val bid = splitLine[1].toInt()
         val cardValues = mutableListOf<Int>()
         val cardOccurrences = mutableMapOf<Char, Int>()
         for (card in rawHand) {
-            cardValues.add(getCardValue(card))
+            cardValues.add(getCardValue(card, isJokerOn))
             cardOccurrences.putIfAbsent(card, 0)
             cardOccurrences[card] = cardOccurrences[card]!! + 1
         }
@@ -60,12 +64,65 @@ class Day07() : Day {
         return CamelCardHand(rawHand, bid, handType, cardValues, cardOccurrences)
     }
 
-    private fun getCardValue(card: Char): Int {
+    private fun createBestCamelCardHand(line: String): CamelCardHand {
+        val splitLine = line.split(" ")
+        val rawHand = splitLine[0]
+        val bid = splitLine[1].toInt()
+        val cardValues = mutableListOf<Int>()
+        val cardOccurrences = mutableMapOf<Char, Int>()
+        for (card in rawHand) {
+            cardValues.add(getCardValue(card, true))
+            cardOccurrences.putIfAbsent(card, 0)
+            cardOccurrences[card] = cardOccurrences[card]!! + 1
+        }
+        val cardOccurrencesWithoutJokers = cardOccurrences.filter { it.key != 'J' }
+        val jokerCount = cardOccurrences.getOrDefault('J', 0)
+        if (jokerCount == 0) return CamelCardHand(rawHand, bid, getHandType(cardOccurrences), cardValues, cardOccurrences)
+        if (jokerCount == 5) return CamelCardHand(rawHand, bid, CamelCardHandType.FIVE_OF_A_KIND, cardValues, cardOccurrences)
+
+        return when (val handType = getHandType(cardOccurrencesWithoutJokers)) {
+            CamelCardHandType.FIVE_OF_A_KIND -> CamelCardHand(rawHand, bid, handType, cardValues, cardOccurrences)
+            CamelCardHandType.FOUR_OF_A_KIND -> CamelCardHand(rawHand, bid, CamelCardHandType.FIVE_OF_A_KIND, cardValues, cardOccurrences)
+            CamelCardHandType.FULL_HOUSE -> CamelCardHand(rawHand, bid, handType, cardValues, cardOccurrences)
+            CamelCardHandType.THREE_OF_A_KIND -> {
+                when (jokerCount) {
+                    2 -> CamelCardHand(rawHand, bid, CamelCardHandType.FIVE_OF_A_KIND, cardValues, cardOccurrences)
+                    1 -> CamelCardHand(rawHand, bid, CamelCardHandType.FOUR_OF_A_KIND, cardValues, cardOccurrences)
+                    else -> CamelCardHand(rawHand, bid, handType, cardValues, cardOccurrences)
+                }
+            }
+            CamelCardHandType.TWO_PAIR -> {
+                when (jokerCount) {
+                    1 -> CamelCardHand(rawHand, bid, CamelCardHandType.FULL_HOUSE, cardValues, cardOccurrences)
+                    else -> CamelCardHand(rawHand, bid, handType, cardValues, cardOccurrences)
+                }
+            }
+            CamelCardHandType.ONE_PAIR -> {
+                when (jokerCount) {
+                    3 -> CamelCardHand(rawHand, bid, CamelCardHandType.FIVE_OF_A_KIND, cardValues, cardOccurrences)
+                    2 -> CamelCardHand(rawHand, bid, CamelCardHandType.FOUR_OF_A_KIND, cardValues, cardOccurrences)
+                    1 -> CamelCardHand(rawHand, bid, CamelCardHandType.THREE_OF_A_KIND, cardValues, cardOccurrences)
+                    else -> CamelCardHand(rawHand, bid, handType, cardValues, cardOccurrences)
+                }
+            }
+            CamelCardHandType.HIGH_CARD -> {
+                when (jokerCount) {
+                    4 -> CamelCardHand(rawHand, bid, CamelCardHandType.FIVE_OF_A_KIND, cardValues, cardOccurrences)
+                    3 -> CamelCardHand(rawHand, bid, CamelCardHandType.FOUR_OF_A_KIND, cardValues, cardOccurrences)
+                    2 -> CamelCardHand(rawHand, bid, CamelCardHandType.THREE_OF_A_KIND, cardValues, cardOccurrences)
+                    1 -> CamelCardHand(rawHand, bid, CamelCardHandType.ONE_PAIR, cardValues, cardOccurrences)
+                    else -> CamelCardHand(rawHand, bid, handType, cardValues, cardOccurrences)
+                }
+            }
+        }
+    }
+
+    private fun getCardValue(card: Char, isJokerOn: Boolean): Int {
         return when (card) {
             'A' -> 14
             'K' -> 13
             'Q' -> 12
-            'J' -> 11
+            'J' -> if (isJokerOn) 1 else 11
             'T' -> 10
             else -> card.digitToInt()
         }
