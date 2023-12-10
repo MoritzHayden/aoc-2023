@@ -6,6 +6,7 @@ package dev.hmoritz.aoc2023.days
 
 import dev.hmoritz.aoc2023.models.Day
 import dev.hmoritz.aoc2023.util.Constants.filenames
+import dev.hmoritz.aoc2023.util.Utils.findLCM
 import dev.hmoritz.aoc2023.util.Utils.readFile
 import dev.hmoritz.aoc2023.util.Utils.writeSolutionsToFile
 
@@ -21,20 +22,40 @@ class Day08() : Day {
 
     private fun solvePart1(): String {
         val instructions = parseInstructions()
-        val root = parseMap()
+        val map = parseMap()
         var currentLocation = "AAA"
         var steps = 0
         while (currentLocation != "ZZZ") {
             steps++
             val instruction = instructions[(steps - 1) % instructions.size]
-            currentLocation = move(instruction, currentLocation, root)
+            currentLocation = move(instruction, currentLocation, map)
         }
         return steps.toString()
     }
 
     private fun solvePart2(): String {
-        // STUB
-        return ""
+        val instructions = parseInstructions()
+        val map = parseMap()
+        val startNodes = map.filter { it.key.last() == 'A' }.keys.toMutableList()
+        val steps = mutableListOf<Long>()
+        for (startNode in startNodes) {
+            steps.add(calculateSteps(instructions, map, startNode))
+        }
+        val stepLCM = findLCM(steps)
+        return stepLCM.toString()
+    }
+
+    private fun calculateSteps(instructions: CharArray,
+                               map: Map<String, Pair<String, String>>,
+                               startNode: String): Long {
+        var steps = 0L
+        var currentNode = startNode
+        while (currentNode.last() != 'Z') {
+            steps++
+            val instruction = instructions[((steps - 1) % instructions.size).toInt()]
+            currentNode = move(instruction, currentNode, map)
+        }
+        return steps
     }
 
     private fun move(instruction: Char, location: String, map: Map<String, Pair<String, String>>): String {
