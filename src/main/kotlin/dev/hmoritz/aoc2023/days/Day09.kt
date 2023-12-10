@@ -8,6 +8,7 @@ import dev.hmoritz.aoc2023.models.Day
 import dev.hmoritz.aoc2023.util.Constants.filenames
 import dev.hmoritz.aoc2023.util.Utils.readFile
 import dev.hmoritz.aoc2023.util.Utils.writeSolutionsToFile
+import kotlin.math.abs
 
 class Day09() : Day {
     private val filename = filenames[8]
@@ -20,12 +21,21 @@ class Day09() : Day {
     }
 
     private fun solvePart1(): String {
-        // STUB
-        return ""
+        // TODO: 1908969839 -> too high
+        return input.sumOf { line -> calculateNextNumber(line.split(" ").map { it.toLong() }) }.toString()
     }
 
     private fun solvePart2(): String {
         // STUB
         return ""
+    }
+
+    private fun calculateNextNumber(numbers: List<Long>): Long {
+        if (numbers.all { it == 0L }) return 0L
+        val pattern = mutableListOf<Long>()
+        for (i in 0..<numbers.indices.last) {
+            pattern.add(abs(numbers[i] - numbers[i+1]))
+        }
+        return numbers.last() + calculateNextNumber(pattern)
     }
 }
