@@ -21,8 +21,9 @@ class Day09() : Day {
     }
 
     private fun solvePart1(): String {
-        // TODO: 1908969839 -> too high
-        return input.sumOf { line -> calculateNextNumber(line.split(" ").map { it.toLong() }) }.toString()
+        // TODO: Debug why this works for the test input but not the real input
+        //  1908969839 is too high
+        return input.sumOf { line -> calculateNextNumber(line.split("\\s+".toRegex()).map { it.toLong() }) }.toString()
     }
 
     private fun solvePart2(): String {
@@ -34,7 +35,7 @@ class Day09() : Day {
         if (numbers.all { it == 0L }) return 0L
         val pattern = mutableListOf<Long>()
         for (i in 0..<numbers.indices.last) {
-            pattern.add(abs(numbers[i] - numbers[i+1]))
+            pattern.add(abs(numbers[i] - numbers[i + 1]))
         }
         return numbers.last() + calculateNextNumber(pattern)
     }
